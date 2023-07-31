@@ -163,7 +163,7 @@ def main(args):
 
     # 분산학습을 위한 데이터 파티셔닝
     # Horovod: use DistributedSampler to partition the training data.
-    # train_sampler: 데이터셋을 분산하는 역할, 각 워커에 고르게 분배, 파라미터 동기화
+    # train_sampler: 데이터셋을 분산하는 역할, 각 워커에 고르게 분배
     train_sampler = torch.utils.data.distributed.DistributedSampler(
         train_dataset, num_replicas=hvd.size(), rank=hvd.rank())
     
