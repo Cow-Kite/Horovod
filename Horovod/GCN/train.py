@@ -49,6 +49,11 @@ class GCN(torch.nn.Module):
         output = self.conv2(x, edge_index)
         return output
 
+def graph_split(graph):
+    split = T.RandomNodeSplit(num_val=0.1, num_test=0.2)
+    graph = split(graph)
+    return graph
+
 # train 
 def train_node_classifier(model, graph, optimizer, criterion, n_epochs=200):
     for epoch in range(1, n_epochs + 1):
@@ -77,11 +82,15 @@ optimizer_gcn = hvd.DistributedOptimizer(optimizer_gcn,
 criterion = nn.CrossEntropyLoss()
 
 if hvd.rank() == 0:
+    clustered_datasets[0] = graph_split(clustered_datasets[0])
     train_node_classifier(gcn, clustered_datasets[0], optimizer_gcn, criterion)
     print("총 소요 시간: %.3f초" %(time.time() - start_time))
 if hvd.rank() == 1:
+    clustered_datasets[1] = graph_split(clustered_datasets[1])
     train_node_classifier(gcn, clustered_datasets[1], optimizer_gcn, criterion)
 if hvd.rank() == 2:
+    clustered_datasets[2] = graph_split(clustered_datasets[2])
     train_node_classifier(gcn, clustered_datasets[2], optimizer_gcn, criterion)
 if hvd.rank() == 3:
+    clustered_datasets[3] = graph_split(clustered_datasets[3])
     train_node_classifier(gcn, clustered_datasets[3], optimizer_gcn, criterion)
