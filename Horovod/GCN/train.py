@@ -81,16 +81,10 @@ optimizer_gcn = hvd.DistributedOptimizer(optimizer_gcn,
 
 criterion = nn.CrossEntropyLoss()
 
-if hvd.rank() == 0:
-    clustered_datasets[0] = graph_split(clustered_datasets[0])
-    train_node_classifier(gcn, clustered_datasets[0], optimizer_gcn, criterion)
+proc_num = hvd.rank()
+clustered_datasets[proc_num] = graph_split(clustered_datasets[proc_num])
+train_node_classifier(gcn, clustered_datasets[proc_num], optimizer_gcn, criterion)
+
+if proc_num == 0:
     print("총 소요 시간: %.3f초" %(time.time() - start_time))
-if hvd.rank() == 1:
-    clustered_datasets[1] = graph_split(clustered_datasets[1])
-    train_node_classifier(gcn, clustered_datasets[1], optimizer_gcn, criterion)
-if hvd.rank() == 2:
-    clustered_datasets[2] = graph_split(clustered_datasets[2])
-    train_node_classifier(gcn, clustered_datasets[2], optimizer_gcn, criterion)
-if hvd.rank() == 3:
-    clustered_datasets[3] = graph_split(clustered_datasets[3])
-    train_node_classifier(gcn, clustered_datasets[3], optimizer_gcn, criterion)
+
