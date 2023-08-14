@@ -30,29 +30,9 @@ def graph_split(graph):
     graph = split(graph)
     return graph
 
-if hvd.rank() == 0:
-    print(clustered_datasets[0])
-    clustered_datasets[0] = graph_split(clustered_datasets[0])
-    print('00 train set:' ,clustered_datasets[0].train_mask.sum().item())
-    print('00 val set:', clustered_datasets[0].val_mask.sum().item())
-    print('00 test set:', clustered_datasets[0].test_mask.sum().item())
-if hvd.rank() == 1:
-    print(clustered_datasets[1])
-    clustered_datasets[1] = graph_split(clustered_datasets[1])
-    print('01 train set:' ,clustered_datasets[1].train_mask.sum().item())
-    print('01 val set:', clustered_datasets[1].val_mask.sum().item())
-    print('01 test set:', clustered_datasets[1].test_mask.sum().item())
-if hvd.rank() == 2:
-    print(clustered_datasets[2])
-    clustered_datasets[2] = graph_split(clustered_datasets[2])
-    print('02 train set:' ,clustered_datasets[2].train_mask.sum().item())
-    print('02 val set:', clustered_datasets[2].val_mask.sum().item())
-    print('02 test set:', clustered_datasets[2].test_mask.sum().item())
-if hvd.rank() == 3:
-    print(clustered_datasets[3])
-    clustered_datasets[3] = graph_split(clustered_datasets[3])
-    print('02 train set:' ,clustered_datasets[3].train_mask.sum().item())
-    print('02 val set:', clustered_datasets[3].val_mask.sum().item())
-    print('02 test set:', clustered_datasets[3].test_mask.sum().item())
-
-    
+proc_num = hvd.rank()
+print(clustered_datasets[proc_num])
+clustered_datasets[proc_num] = graph_split(clustered_datasets[proc_num])
+print('train set:' ,clustered_datasets[proc_num].train_mask.sum().item())
+print('val set:', clustered_datasets[proc_num].val_mask.sum().item())
+print('test set:', clustered_datasets[proc_num].test_mask.sum().item())
