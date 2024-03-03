@@ -9,7 +9,7 @@ num_clusters = 5
 dataset = Amazon(root=data_dir, name='computers')
 graph = dataset[0]
 
-cluster = loader.ClusterData(graph, num_parts=num_clusters, recursive=True)
+cluster = loader.ClusterData(graph, num_parts=num_clusters, recursive=False)
 clusterloader = loader.ClusterLoader(cluster)
 
 # 각 배치(파티션)를 파일로 저장
