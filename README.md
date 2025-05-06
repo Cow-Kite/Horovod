@@ -5,7 +5,7 @@ __강소연__, 이상훈, 문양세, "Horovod 기반 분산 GCN 학습에서 그
 Horovod, PyTorch, PyTorch Geometric
 
 
-## Horovod 분산 프레임워크 동작 과정
+## 1. Horovod 분산 프레임워크 동작 과정
 __(1) Graph Partitioning__<br>
 - METIS로 그래프 데이터 파티셔닝 수행 -> 서브그래프 구성<br>
 
@@ -22,7 +22,7 @@ __(5) Synchronization__<br>
 
 ![image](https://github.com/user-attachments/assets/2048d289-f61c-4475-b85b-7347e8bc8488)
 
-## 그래프 파티셔닝 특성
+## 2. 그래프 파티셔닝 특성
 __(1) 엣지 컷__<br>
 - 그래프 데이터는 노드와 노드 사이를 잇는 엣지로 구성<br>
 - 파티셔닝 수행 후, 파티션 간 엣지가 삭제되는 엣지 컷 발생<br> 
@@ -33,13 +33,38 @@ __(2) 차수(degree)에 따른 엣지 컷__<br>
 - 엣지 컷 -> 정보 손실 -> 학습 성능에 영향<br>
 <img src="images/degree_edgecut.png" width="400" height="250"/>
 
-## 차수와 클래스 수에 따른 분산 학습 결과
-__(1) 차수↑ 클래스↑ 데이터셋 __<br>
-__(2) 차수↑ 클래스↓ 데이터셋 __<br>
-__(3) 차수↓ 클래스↑ 데이터셋 __<br>
-__(4) 차수↓ 클래스↓ 데이터셋 __<br>
+## 3. 차수와 클래스 수에 따른 분산 학습 결과
+__(1) 차수↑ 클래스↑ 데이터셋__<br>
+<img src="images/(1).png" width="400" height="300"/>
+<br>
+<br>
+__(2) 차수↑ 클래스↓ 데이터셋__<br>
+<img src="images/(2).png" width="400" height="300"/>
+<br>
+<br>
+__(3) 차수↓ 클래스↑ 데이터셋__<br>
+<img src="images/(3).png" width="400" height="300"/>
+<br>
+<br>
+__(4) 차수↓ 클래스↓ 데이터셋__<br>
+<img src="images/(4).png" width="400" height="300"/>
+<br>
+<br>
 
-
+## 4. 추가 실험
+__(1) 클래스를 2개로 클러스터링 후 분산 학습__<br>
+- 3-(1)의 Amazon(Com) 데이터셋의 클래스를 클러스터링을 사용해 2개로 축소<br>
+- 클래스 수 축소 -> 학습 정확도가 유지<br>
+<img src="images/4-1.png" width="400" height="200"/>
+<br>
+<br>
+__(2) GAT 분산 학습__<br>
+- 3-(1)의 Amazon(Com) 데이터셋을 GAT로 분산 학습<br>
+- GAT는 Transformer의 Attention을 적용한 모델<br>
+- 그래프의 노드간 가중치 반영 가능 -> 보다 정확한 학습 가능 -> 분산 학습 시 정확도 유지<br>
+<img src="images/4-2.png" width="350" height="200"/>
+<br>
+<br>
 
 
 
